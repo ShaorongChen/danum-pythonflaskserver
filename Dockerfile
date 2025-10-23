@@ -1,10 +1,16 @@
-FROM python:3.8-slim-buster
-
+# Multi-stage build
+FROM python:3.13-slim-bookworm AS builder
 
 WORKDIR /python-docker
 
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
+
+FROM python:3.13-slim-bookworm
+
+WORKDIR /python-docker
+
+COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
 
 COPY . .
 
